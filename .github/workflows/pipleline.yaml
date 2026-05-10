@@ -1,0 +1,78 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # =========================
+      # Checkout repository
+      # =========================
+      - name: Checkout code
+        uses: actions/checkout@v3
+      #===========================
+
+      # setup Node.js
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with: 
+          node-version: 20
+
+      # =========================
+      # Frontend
+      # =========================
+
+      # install dependecies
+
+      - name: install frontend Dependecies
+        working-directory: ./frontend/first-lesson
+        run: npm ci
+
+      # run lint dependencies
+
+      - name: run frontend lint
+        working-directory: ./frontend/first-lesson
+        run: npm run lint
+
+      # build frontend enviroment
+
+      - name: build frontend environment
+        working-directory: ./frontend/first-lesson
+        run: npm run build
+
+      # =========================
+      # Backend
+      # =========================
+
+      # install dependecies
+
+      - name: intsall backend Dependecies
+        working-directory: ./backend
+        run: npm ci
+
+      # build backend environment
+
+      - name: install backend environment
+        working-directory: ./backend
+        run: npm run build
+
+      # install backend lint
+
+      - name: install backend lint
+        working-directory: ./backend
+        run: npx eslint
+
+      # =========================
+      # FINAL STEP
+      # =========================
+      - name: Show repository files
+        run: ls -R
+
+      - name: CI Completed
+        run: echo "CI Pipeline completed successfully!"
