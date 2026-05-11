@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend_container_first_lesson
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
+    env_file:
+      - ./backend/.env
+
+    command: npm run dev -- --legacy-watch
+
+  frontend:
+    build: ./frontend/first-lesson
+    container_name: frontend_container_first_lesson
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/first-lesson:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev -- --host
+
+    depends_on:
+      - backend
