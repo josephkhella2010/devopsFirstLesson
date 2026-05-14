@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-
+import { generateToken } from "../utils/auth/jwt.js";
 const prisma = new PrismaClient();
 
 router.post("/login-user", async (req, res) => {
@@ -47,10 +47,12 @@ router.post("/login-user", async (req, res) => {
         message: "Invalid password",
       });
     }
+    const token = generateToken(findUser);
 
     return res.status(200).json({
       message: "successfully logged in User",
       user: findUser,
+      token,
     });
   } catch (err) {
     if (err.code === "P2025") {

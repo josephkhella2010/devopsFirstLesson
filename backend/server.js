@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client";
 import getUsers from "./api-routers/getUsers.js";
 import registerUser from "./api-routers/registerUser.js";
 import deleteUser from "./api-routers/deleteUser.js";
@@ -10,8 +9,6 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-
-const prisma = new PrismaClient(); // ✅ MUST BE HERE
 
 const PORT = process.env.PORT || 5000;
 
