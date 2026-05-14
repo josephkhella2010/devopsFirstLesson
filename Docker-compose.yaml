@@ -1,37 +1,73 @@
 version: "3.9"
 
 services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_container
+    restart: always
+
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: "0000"
+      POSTGRES_DB: projectdb
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    restart: always
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: "0000"
+
+    ports:
+      - "5050:80"
+
+    depends_on:
+      - postgres
+
   backend:
     build: ./backend
-    container_name: backend_container_first_lesson
+    container_name: backend_container
+    restart: always
+
     ports:
       - "5000:5000"
+
     volumes:
       - ./backend:/app
       - /app/node_modules
+
     environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
+      DATABASE_URL: "postgresql://admin:0000@postgres:5432/projectdb"
 
-    env_file:
-      - ./backend/.env
+    command: sh -c "npx prisma generate && npx nodemon --legacy-watch server.js"
 
-    command: npm run dev -- --legacy-watch
+    depends_on:
+      - postgres
 
   frontend:
     build: ./frontend/first-lesson
-    container_name: frontend_container_first_lesson
+    container_name: frontend_container
+    restart: always
+
     ports:
       - "5173:5173"
+
     volumes:
       - ./frontend/first-lesson:/app
       - /app/node_modules
-    stdin_open: true
-    tty: true
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    command: npm run dev -- --host
+
+    command: npm run dev -- --host 0.0.0.0 --port 5173
 
     depends_on:
       - backend
+
+volumes:
+  postgres_data:

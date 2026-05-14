@@ -1,16 +1,29 @@
 import express from "express";
 import dotenv from "dotenv";
+import { PrismaClient } from "@prisma/client";
+import getUsers from "./api-routers/getUsers.js";
+import registerUser from "./api-routers/registerUser.js";
+import deleteUser from "./api-routers/deleteUser.js";
+import loginUser from "./api-routers/loginUser.js";
 
 dotenv.config();
 
 const app = express();
+app.use(express.json());
+
+const prisma = new PrismaClient(); // ✅ MUST BE HERE
 
 const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
-  res.send("hello docker how are u ");
+  res.send("hello docker welcome back");
 });
 
-app.listen(PORT, () => {
+app.use("/api", getUsers);
+app.use("/api", registerUser);
+app.use("/api", deleteUser);
+app.use("/api", loginUser);
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
