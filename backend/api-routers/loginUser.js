@@ -50,7 +50,7 @@ router.post("/login-user", async (req, res) => {
 
     return res.status(200).json({
       message: "successfully logged in User",
-      findUser,
+      user: findUser,
     });
   } catch (err) {
     if (err.code === "P2025") {
