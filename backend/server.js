@@ -4,6 +4,7 @@ import getUsers from "./api-routers/getUsers.js";
 import registerUser from "./api-routers/registerUser.js";
 import deleteUser from "./api-routers/deleteUser.js";
 import loginUser from "./api-routers/loginUser.js";
+import updateUser from "./api-routers/updateUser.js";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use("/api", getUsers);
 app.use("/api", registerUser);
 app.use("/api", deleteUser);
 app.use("/api", loginUser);
+app.use("/api", updateUser);
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running at http://localhost:${PORT}`);

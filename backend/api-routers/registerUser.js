@@ -1,9 +1,9 @@
 import express from "express";
-const router = express.Router();
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+const router = express.Router();
 
 router.post("/add-new-user", async (req, res) => {
   try {

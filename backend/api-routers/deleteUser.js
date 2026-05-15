@@ -1,10 +1,12 @@
 import express from "express";
-const router = express.Router();
 import { PrismaClient } from "@prisma/client";
+import { auth } from "../utils/auth/auth.js";
+import { requireSelf } from "../utils/auth/auth.js";
 
 const prisma = new PrismaClient();
+const router = express.Router();
 
-router.delete("/delete-user/:id", async (req, res) => {
+router.delete("/delete-user/:id", auth, requireSelf, async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
